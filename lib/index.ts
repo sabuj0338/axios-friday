@@ -1,5 +1,5 @@
 'use strict';
 
-import Borak from "./borak";
+import BorakApiCaller from "./borak";
 
-export default Borak;
+export default BorakApiCaller;

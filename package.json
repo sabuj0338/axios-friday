@@ -1,0 +1,35 @@
+{
+  "name": "borak-api-caller",
+  "version": "1.0.0",
+  "description": "Borak - a axios based api calling custom class. which has refresh token mechanism configured.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabuj0338/borak-api-caller.git"
+  },
+  "keywords": [
+    "axios",
+    "refresh",
+    "token",
+    "custom",
+    "class"
+  ],
+  "author": "Sabuj Islam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sabuj0338/borak-api-caller/issues"
+  },
+  "homepage": "https://github.com/sabuj0338/borak-api-caller#readme",
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "js-cookie": "^3.0.5"
+  }
+}

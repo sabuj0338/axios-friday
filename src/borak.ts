@@ -1,25 +1,25 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import * as Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
-export interface BorakApiCallerOptions {
+export interface BorakApiClientOptions {
   showToast?: false;
   body?: object;
   headers?: object;
 }
 
-export interface BorakApiCallerConfig {
-  baseUrl: string;
+export interface BorakApiClientConfig {
+  baseURL: string;
   refreshTokenAPI: string;
   accessTokenKey: string;
   refreshTokenKey: string;
   enableRefreshToken: boolean;
 }
 
-export default class BorakApiCaller {
-  /* The above code is declaring a private property `config` of type `BorakApiCallerConfig` in a TypeScript
-  class or interface. The `BorakApiCallerConfig` type is likely a custom type defined elsewhere in the
+export default class BorakApiClient {
+  /* The above code is declaring a private property `config` of type `BorakApiClientConfig` in a TypeScript
+  class or interface. The `BorakApiClientConfig` type is likely a custom type defined elsewhere in the
   codebase. This property can only be accessed within the class or interface where it is declared. */
-  private config: BorakApiCallerConfig;
+  private config: BorakApiClientConfig;
 
   /* The above code is declaring a private property named `axiosInstance` of type `AxiosInstance`. This
   property is likely used to store an instance of Axios, which is a popular library for making HTTP
@@ -30,15 +30,15 @@ export default class BorakApiCaller {
   /**
    * The constructor function initializes an Axios instance with a base URL and sets up a response
    * interceptor to handle token expiration and refresh if configured to do so.
-   * @param {BorakApiCallerConfig} config - The `config` parameter in the constructor function is of type
-   * `BorakApiCallerConfig`. It is used to configure the BorakApiCaller instance with settings such as `baseUrl` and
+   * @param {BorakApiClientConfig} config - The `config` parameter in the constructor function is of type
+   * `BorakApiClientConfig`. It is used to configure the BorakApiClient instance with settings such as `baseURL` and
    * `enableRefreshToken`. The `axiosInstance` is created with the base URL specified in the `config`.
    */
-  constructor(config: BorakApiCallerConfig) {
+  constructor(config: BorakApiClientConfig) {
     this.config = config;
 
     // Create an Axios instance with a base URL
-    this.axiosInstance = axios.create({ baseURL: this.config.baseUrl });
+    this.axiosInstance = axios.create({ baseURL: this.config.baseURL });
 
     if (this.config.enableRefreshToken) {
       // Axios response interceptor to handle token expiration and refresh
@@ -142,12 +142,12 @@ export default class BorakApiCaller {
    * @param {unknown} e - The parameter `e` in the `handleError` function is used to represent the
    * error that needs to be handled. It can be of type `unknown`, which means it can be any type of
    * value. The function checks if `e` is an AxiosError and extracts the error message accordingly.
-   * @param {BorakApiCallerOptions} [options] - The `options` parameter in the `handleError` function is of type
-   * `BorakApiCallerOptions`. It is an optional parameter that allows you to pass additional options to the
+   * @param {BorakApiClientOptions} [options] - The `options` parameter in the `handleError` function is of type
+   * `BorakApiClientOptions`. It is an optional parameter that allows you to pass additional options to the
    * function. These options can include properties like `showToast`, which is a boolean value
    * indicating whether a toast message should be displayed
    */
-  private handleError(e: unknown, options?: BorakApiCallerOptions): void {
+  private handleError(e: unknown, options?: BorakApiClientOptions): void {
     let errorMessage: string | undefined;
 
     if ((e as AxiosError)?.response) {
@@ -176,15 +176,15 @@ export default class BorakApiCaller {
    * @param {URL} url - The `url` parameter in the `get` function is of type `URL`, which represents a
    * Uniform Resource Locator and is used to specify the address of a resource on the internet. It is
    * the endpoint from which the data will be fetched in the `get` request.
-   * @param {BorakApiCallerOptions} [options] - The `options` parameter in the `get` function is of type
-   * `BorakApiCallerOptions`. It is an optional parameter that can be passed to the function to provide
+   * @param {BorakApiClientOptions} [options] - The `options` parameter in the `get` function is of type
+   * `BorakApiClientOptions`. It is an optional parameter that can be passed to the function to provide
    * additional configuration or settings for the HTTP request. This parameter allows for customization
    * of the request behavior based on the specific needs of the application
    * @returns The `get` function is returning the data from the response if the request is successful.
    * If there is an error during the request, it will handle the error using the `handleError` method
    * with the provided options.
    */
-  async get(url: URL, options?: BorakApiCallerOptions) {
+  async get(url: URL, options?: BorakApiClientOptions) {
     try {
       const response = await this.axiosInstance.get<unknown, AxiosResponse>(
         url.href,
@@ -208,15 +208,15 @@ export default class BorakApiCaller {
    * @param {URL} url - The `url` parameter in the `post` function is a URL object that represents the
    * endpoint where the POST request will be sent. It specifies the location where the data will be
    * posted to.
-   * @param {BorakApiCallerOptions} [options] - The `options` parameter in the `post` function is an optional
-   * parameter of type `BorakApiCallerOptions`. It is used to provide additional configuration options for the
+   * @param {BorakApiClientOptions} [options] - The `options` parameter in the `post` function is an optional
+   * parameter of type `BorakApiClientOptions`. It is used to provide additional configuration options for the
    * HTTP POST request, such as the request body and headers. If `options` is provided, the function
    * will use the `body`
    * @returns The `post` function is returning the data from the response if the request is successful.
    * If there is an error during the request, it will handle the error using the `handleError` method
    * and return the result of that handling.
    */
-  async post(url: URL, options?: BorakApiCallerOptions) {
+  async post(url: URL, options?: BorakApiClientOptions) {
     try {
       const response = await this.axiosInstance.post<unknown, AxiosResponse>(
         url.href,
@@ -241,13 +241,13 @@ export default class BorakApiCaller {
    * errors that occur.
    * @param {URL} url - The `url` parameter in the `put` function is a URL object that represents the
    * URL where the PUT request will be sent. It is used to specify the destination of the request.
-   * @param {BorakApiCallerOptions} [options] - The `options` parameter in the `put` function is an optional
+   * @param {BorakApiClientOptions} [options] - The `options` parameter in the `put` function is an optional
    * object that may contain the following properties:
    * @returns The `put` function is returning the data from the response if the request is successful.
    * If there is an error during the request, it will handle the error using the `handleError` method
    * and return the result of that handling.
    */
-  async put(url: URL, options?: BorakApiCallerOptions) {
+  async put(url: URL, options?: BorakApiClientOptions) {
     try {
       const response = await this.axiosInstance.put<unknown, AxiosResponse>(
         url.href,
@@ -272,15 +272,15 @@ export default class BorakApiCaller {
    * handling errors and returning the response data.
    * @param {URL} url - The `url` parameter is a `URL` object that represents the URL of the resource
    * you want to delete. It is used to specify the location of the resource that you want to delete.
-   * @param {BorakApiCallerOptions} [options] - The `options` parameter in the `delete` function is an optional
-   * parameter of type `BorakApiCallerOptions`. It is used to provide additional configuration options for the
+   * @param {BorakApiClientOptions} [options] - The `options` parameter in the `delete` function is an optional
+   * parameter of type `BorakApiClientOptions`. It is used to provide additional configuration options for the
    * HTTP request, such as request body and headers. The function uses the `body` property from the
    * `options` object as the data
    * @returns The `delete` method is returning the data from the response if the request is successful.
    * If there is an error during the request, it will handle the error and return the result of the
    * `handleError` method with the provided options.
    */
-  async delete(url: URL, options?: BorakApiCallerOptions) {
+  async delete(url: URL, options?: BorakApiClientOptions) {
     try {
       const response = await this.axiosInstance.delete(url.href, {
         data: options?.body,

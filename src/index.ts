@@ -1,5 +1,3 @@
-'use strict';
+import BorakApiClient from "./borak";
 
-import BorakApiCaller from "./borak";
-
-export default BorakApiCaller;
+export default BorakApiClient;

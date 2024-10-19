@@ -1,42 +1,6 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// src/index.ts
-var src_exports = {};
-__export(src_exports, {
-  default: () => src_default
-});
-module.exports = __toCommonJS(src_exports);
-
 // src/borak.ts
-var import_axios = __toESM(require("axios"));
-var import_js_cookie = __toESM(require("js-cookie"));
+import axios from "axios";
+import Cookies from "js-cookie";
 var BorakApiClient = class {
   /* The above code is declaring a private property `config` of type `BorakApiClientConfig` in a TypeScript
   class or interface. The `BorakApiClientConfig` type is likely a custom type defined elsewhere in the
@@ -56,7 +20,7 @@ var BorakApiClient = class {
    */
   constructor(config) {
     this.config = config;
-    this.axiosInstance = import_axios.default.create({ baseURL: this.config.baseURL });
+    this.axiosInstance = axios.create({ baseURL: this.config.baseURL });
     if (this.config.enableRefreshToken) {
       this.axiosInstance.interceptors.response.use(
         (response) => response,
@@ -102,8 +66,8 @@ var BorakApiClient = class {
    * contains data such as the response data, status, headers, and more.
    */
   resetTokens(res) {
-    import_js_cookie.default.set(this.config.accessTokenKey, res.data.access_token);
-    import_js_cookie.default.set(this.config.refreshTokenKey, res.data.refresh_token);
+    Cookies.set(this.config.accessTokenKey, res.data.access_token);
+    Cookies.set(this.config.refreshTokenKey, res.data.refresh_token);
   }
   /**
    * The function `getAccessToken` retrieves the access token from a cookie using the key specified in
@@ -112,7 +76,7 @@ var BorakApiClient = class {
    * access token from a cookie using the `accessTokenKey` specified in the configuration.
    */
   getAccessToken() {
-    return import_js_cookie.default.get(this.config.accessTokenKey);
+    return Cookies.get(this.config.accessTokenKey);
   }
   /**
    * Retrieves the refresh token from a cookie using the key specified in the configuration.
@@ -120,7 +84,7 @@ var BorakApiClient = class {
    * `refreshTokenKey` specified in the configuration.
    */
   getRefreshToken() {
-    return import_js_cookie.default.get(this.config.refreshTokenKey);
+    return Cookies.get(this.config.refreshTokenKey);
   }
   /**
    * The function `getAuthorizationHeader` returns an object with an Authorization header containing a
@@ -311,3 +275,6 @@ var BorakApiClient = class {
 
 // src/index.ts
 var src_default = BorakApiClient;
+export {
+  src_default as default
+};

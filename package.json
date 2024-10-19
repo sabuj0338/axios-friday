@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Borak - a axios based api calling custom class. which has refresh token mechanism configured.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "test"

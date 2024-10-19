@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
+import * as Cookies from "js-cookie";
 
 export interface BorakApiCallerOptions {
   showToast?: false;

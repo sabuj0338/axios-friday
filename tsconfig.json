@@ -1,15 +1,11 @@
 {
   "compilerOptions": {
-    "module": "node16",
-    "lib": ["dom", "es2015"],
-    "types": [],
-    "strict": true,
-    "noEmit": true,
-    "outDir": "./dist",
-    "rootDir": "./lib"
+    "module": "commonjs",
+    "target": "es2019",
+    "declaration": true,
+    "outDir": "./dist"
   },
-  "exclude": [
-    "node_modules",
-    "dist"
+  "include": [
+    "src/**/*"
   ]
 }

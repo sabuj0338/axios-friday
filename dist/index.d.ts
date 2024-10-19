@@ -145,7 +145,7 @@ declare class BorakApiClient {
      * @returns The `upload` function is returning the data from the response if the request is successful.
      * If an error occurs during the request, it will handle the error using the `handleError` method.
      */
-    upload(url: URL, body: FormData): Promise<void | FormData>;
+    upload(url: URL, body: FormData): Promise<any>;
 }
 
 export { BorakApiClient as default };

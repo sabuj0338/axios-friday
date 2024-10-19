@@ -186,7 +186,7 @@ export default class BorakApiClient {
    */
   async get(url: URL, options?: BorakApiClientOptions) {
     try {
-      const response = await this.axiosInstance.get<unknown, AxiosResponse>(
+      const response = await this.axiosInstance.get(
         url.href,
         {
           headers: {
@@ -218,7 +218,7 @@ export default class BorakApiClient {
    */
   async post(url: URL, options?: BorakApiClientOptions) {
     try {
-      const response = await this.axiosInstance.post<unknown, AxiosResponse>(
+      const response = await this.axiosInstance.post(
         url.href,
         options?.body,
         {
@@ -249,7 +249,7 @@ export default class BorakApiClient {
    */
   async put(url: URL, options?: BorakApiClientOptions) {
     try {
-      const response = await this.axiosInstance.put<unknown, AxiosResponse>(
+      const response = await this.axiosInstance.put(
         url.href,
         options?.body,
         {
@@ -310,7 +310,7 @@ export default class BorakApiClient {
  */
   async upload(url: URL, body: FormData) {
     try {
-      const response = await this.axiosInstance.post<FormData>(url.href, body, {
+      const response = await this.axiosInstance.post(url.href, body, {
         headers: {
           ...this.getAuthorizationHeader(),
         },

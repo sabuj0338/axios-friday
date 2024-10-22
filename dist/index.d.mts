@@ -1,28 +1,37 @@
 import { AxiosResponse } from 'axios';
 
-interface BorakApiClientOptions {
-    showToast?: false;
+interface FridayOptions {
+    enableThrowHttpError?: false;
     body?: object;
     headers?: object;
 }
-interface BorakApiClientConfig {
+/**
+ * @var baseURL: a required string property representing the base URL for API requests.
+ * @var accessTokenKey: an optional string property representing the key for accessing the access token.
+ * @var refreshTokenKey: an optional string property representing the key for accessing the refresh token.
+ * @var refreshTokenEndpoint: an optional string property representing the API endpoint for refreshing tokens.
+ * @var enableAccessToken: a optional boolean property indicating whether token access is enabled.
+ * @var enableRefreshToken: a optional boolean property indicating whether token refresh is enabled.
+ */
+interface FridayConfig {
     baseURL: string;
-    refreshTokenAPI: string;
-    accessTokenKey: string;
-    refreshTokenKey: string;
-    enableRefreshToken: boolean;
+    accessTokenKey?: string;
+    refreshTokenKey?: string;
+    refreshTokenEndpoint?: string;
+    enableAccessToken?: boolean;
+    enableRefreshToken?: boolean;
 }
-declare class BorakApiClient {
+declare class Friday {
     private config;
     private axiosInstance;
     /**
      * The constructor function initializes an Axios instance with a base URL and sets up a response
      * interceptor to handle token expiration and refresh if configured to do so.
-     * @param {BorakApiClientConfig} config - The `config` parameter in the constructor function is of type
-     * `BorakApiClientConfig`. It is used to configure the BorakApiClient instance with settings such as `baseURL` and
+     * @param {FridayConfig} config - The `config` parameter in the constructor function is of type
+     * `FridayConfig`. It is used to configure the Friday instance with settings such as `baseURL` and
      * `enableRefreshToken`. The `axiosInstance` is created with the base URL specified in the `config`.
      */
-    constructor(config: BorakApiClientConfig);
+    constructor({ baseURL, accessTokenKey, refreshTokenKey, refreshTokenEndpoint, enableAccessToken, enableRefreshToken, }: FridayConfig);
     /**
      * The function `refreshAccessToken` asynchronously refreshes the access token by making an API
      * request using a refresh token and updating the access token in the app's storage.
@@ -65,8 +74,8 @@ declare class BorakApiClient {
      * @param {unknown} e - The parameter `e` in the `handleError` function is used to represent the
      * error that needs to be handled. It can be of type `unknown`, which means it can be any type of
      * value. The function checks if `e` is an AxiosError and extracts the error message accordingly.
-     * @param {BorakApiClientOptions} [options] - The `options` parameter in the `handleError` function is of type
-     * `BorakApiClientOptions`. It is an optional parameter that allows you to pass additional options to the
+     * @param {FridayOptions} [options] - The `options` parameter in the `handleError` function is of type
+     * `FridayOptions`. It is an optional parameter that allows you to pass additional options to the
      * function. These options can include properties like `showToast`, which is a boolean value
      * indicating whether a toast message should be displayed
      */
@@ -83,56 +92,56 @@ declare class BorakApiClient {
      * @param {URL} url - The `url` parameter in the `get` function is of type `URL`, which represents a
      * Uniform Resource Locator and is used to specify the address of a resource on the internet. It is
      * the endpoint from which the data will be fetched in the `get` request.
-     * @param {BorakApiClientOptions} [options] - The `options` parameter in the `get` function is of type
-     * `BorakApiClientOptions`. It is an optional parameter that can be passed to the function to provide
+     * @param {FridayOptions} [options] - The `options` parameter in the `get` function is of type
+     * `FridayOptions`. It is an optional parameter that can be passed to the function to provide
      * additional configuration or settings for the HTTP request. This parameter allows for customization
      * of the request behavior based on the specific needs of the application
      * @returns The `get` function is returning the data from the response if the request is successful.
      * If there is an error during the request, it will handle the error using the `handleError` method
      * with the provided options.
      */
-    get(url: URL, options?: BorakApiClientOptions): Promise<any>;
+    get(url: URL, options?: FridayOptions): Promise<AxiosResponse<any, any> | undefined>;
     /**
      * This TypeScript function sends a POST request using Axios with optional parameters and handles any
      * errors that occur.
      * @param {URL} url - The `url` parameter in the `post` function is a URL object that represents the
      * endpoint where the POST request will be sent. It specifies the location where the data will be
      * posted to.
-     * @param {BorakApiClientOptions} [options] - The `options` parameter in the `post` function is an optional
-     * parameter of type `BorakApiClientOptions`. It is used to provide additional configuration options for the
+     * @param {FridayOptions} [options] - The `options` parameter in the `post` function is an optional
+     * parameter of type `FridayOptions`. It is used to provide additional configuration options for the
      * HTTP POST request, such as the request body and headers. If `options` is provided, the function
      * will use the `body`
      * @returns The `post` function is returning the data from the response if the request is successful.
      * If there is an error during the request, it will handle the error using the `handleError` method
      * and return the result of that handling.
      */
-    post(url: URL, options?: BorakApiClientOptions): Promise<any>;
+    post(url: URL, options?: FridayOptions): Promise<AxiosResponse<any, any> | undefined>;
     /**
      * This TypeScript function sends a PUT request using Axios with specified options and handles any
      * errors that occur.
      * @param {URL} url - The `url` parameter in the `put` function is a URL object that represents the
      * URL where the PUT request will be sent. It is used to specify the destination of the request.
-     * @param {BorakApiClientOptions} [options] - The `options` parameter in the `put` function is an optional
+     * @param {FridayOptions} [options] - The `options` parameter in the `put` function is an optional
      * object that may contain the following properties:
      * @returns The `put` function is returning the data from the response if the request is successful.
      * If there is an error during the request, it will handle the error using the `handleError` method
      * and return the result of that handling.
      */
-    put(url: URL, options?: BorakApiClientOptions): Promise<any>;
+    put(url: URL, options?: FridayOptions): Promise<AxiosResponse<any, any> | undefined>;
     /**
      * The `delete` function sends a DELETE request to a specified URL with optional headers and body,
      * handling errors and returning the response data.
      * @param {URL} url - The `url` parameter is a `URL` object that represents the URL of the resource
      * you want to delete. It is used to specify the location of the resource that you want to delete.
-     * @param {BorakApiClientOptions} [options] - The `options` parameter in the `delete` function is an optional
-     * parameter of type `BorakApiClientOptions`. It is used to provide additional configuration options for the
+     * @param {FridayOptions} [options] - The `options` parameter in the `delete` function is an optional
+     * parameter of type `FridayOptions`. It is used to provide additional configuration options for the
      * HTTP request, such as request body and headers. The function uses the `body` property from the
      * `options` object as the data
      * @returns The `delete` method is returning the data from the response if the request is successful.
      * If there is an error during the request, it will handle the error and return the result of the
      * `handleError` method with the provided options.
      */
-    delete(url: URL, options?: BorakApiClientOptions): Promise<any>;
+    delete(url: URL, options?: FridayOptions): Promise<AxiosResponse<any, any> | undefined>;
     /**
      * The `upload` function makes an asynchronous POST request using Axios with error handling and returns
      * the response data.
@@ -145,7 +154,7 @@ declare class BorakApiClient {
      * @returns The `upload` function is returning the data from the response if the request is successful.
      * If an error occurs during the request, it will handle the error using the `handleError` method.
      */
-    upload(url: URL, body: FormData): Promise<any>;
+    upload(url: URL, body: FormData): Promise<AxiosResponse<any, any> | undefined>;
 }
 
-export { BorakApiClient as default };
+export { type FridayConfig, type FridayOptions, Friday as default };

@@ -25,12 +25,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sabuj0338/borak-api-client.git"
+    "url": "https://github.com/sabuj0338/axios-friday.git"
   },
   "bugs": {
-    "url": "https://github.com/sabuj0338/borak-api-client.git/issues"
+    "url": "https://github.com/sabuj0338/axios-friday.git/issues"
   },
-  "homepage": "https://github.com/sabuj0338/borak-api-client.git#readme",
+  "homepage": "https://github.com/sabuj0338/axios-friday.git#readme",
   "dependencies": {
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5"

@@ -1,6 +1,6 @@
 {
   "name": "@sabuj0338/axios-friday",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Friday - a axios based api handling custom class. which has refresh token mechanism configured.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -31,7 +31,7 @@ const friday = new Friday({
 });
 
 # returns 'AxiosResponse'
-const response = await borak.get(new URL(baseURL));
+const response = await friday.get(new URL(baseURL));
 
 ```
 

@@ -1,7 +1,7 @@
 {
-  "name": "borak-api-client",
+  "name": "@sabuj0338/axios-friday",
   "version": "0.1.0",
-  "description": "Borak - a axios based api calling custom class. which has refresh token mechanism configured.",
+  "description": "Friday - a axios based api handling custom class. which has refresh token mechanism configured.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -19,9 +19,7 @@
     "library",
     "axios",
     "refresh",
-    "token",
-    "custom",
-    "class"
+    "token"
   ],
   "author": "Sabuj Islam",
   "license": "MIT",

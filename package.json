@@ -1,15 +1,16 @@
 {
   "name": "@sabuj0338/axios-friday",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Friday - a axios based api handling custom class. which has refresh token mechanism configured.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/**/*"
   ],
   "scripts": {
     "build": "tsup",
+    "prepare": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -21,11 +22,11 @@
     "refresh",
     "token"
   ],
-  "author": "Sabuj Islam",
+  "author": "Sabuj Islam <sabuj0338@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sabuj0338/axios-friday.git"
+    "url": "git+https://github.com/sabuj0338/axios-friday.git"
   },
   "bugs": {
     "url": "https://github.com/sabuj0338/axios-friday.git/issues"

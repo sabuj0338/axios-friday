@@ -1,15 +1,2 @@
-*.iml
-.idea
-.tscache
-.DS_Store
-node_modules/
-coverage/
-temp/
-test/*
-sauce_connect.log
-test/module/**/package-lock.json
-backup/
-/.husky/
-.npmrc
-.env
-old/
+node_modules
+/dist

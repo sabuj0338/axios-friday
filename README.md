@@ -43,9 +43,6 @@ import { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
-export const API_URL = import.meta.env.VITE_BASE_API_URL;
-export const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL;
-
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 const REFRESH_TOKEN_API = import.meta.env.VITE_REFRESH_TOKEN_API;
 const REFRESH_TOKEN_KEY = import.meta.env.VITE_REFRESH_TOKEN_KEY;

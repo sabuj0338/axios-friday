@@ -1,16 +1,19 @@
-// src/index.ts
-import axios from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-var Friday = class {
+import { FridayConfig, FridayOptions } from "./types";
+
+export class Friday {
   /* The above code is declaring a private property `config` of type `FridayConfig` in a TypeScript
   class or interface. The `FridayConfig` type is likely a custom type defined elsewhere in the
   codebase. This property can only be accessed within the class or interface where it is declared. */
-  config;
+  private config: FridayConfig;
+
   /* The above code is declaring a private property named `axiosInstance` of type `AxiosInstance`. This
   property is likely used to store an instance of Axios, which is a popular library for making HTTP
   requests in JavaScript and TypeScript. This property can be accessed and used within the class
   where it is declared. */
-  axiosInstance;
+  private axiosInstance: AxiosInstance;
+
   /**
    * The constructor function initializes an Axios instance with a base URL and sets up a response
    * interceptor to handle token expiration and refresh if configured to do so.
@@ -24,33 +27,43 @@ var Friday = class {
     refreshTokenKey = "refresh_token",
     refreshTokenEndpoint = "/api/refresh",
     enableAccessToken = true,
-    enableRefreshToken = false
-  }) {
+    enableRefreshToken = false,
+  }: FridayConfig) {
     this.config = {
       baseURL,
       accessTokenKey,
       refreshTokenKey,
       refreshTokenEndpoint,
       enableAccessToken,
-      enableRefreshToken
+      enableRefreshToken,
     };
+
+    // Create an Axios instance with a base URL
     this.axiosInstance = axios.create({ baseURL: this.config.baseURL });
+
     if (this.config.enableRefreshToken && this.config.refreshTokenEndpoint) {
+      // Axios response interceptor to handle token expiration and refresh
       this.axiosInstance.interceptors.response.use(
         (response) => response,
         async (error) => {
           const originalRequest = error.config;
+
+          // Check if the error is due to an expired token (HTTP status code 401)
           if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             const newAccessToken = await this.refreshAccessToken();
+
+            // Retry the original request with the new access token
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return this.axiosInstance(originalRequest);
           }
+
           return Promise.reject(error);
         }
       );
     }
   }
+
   /**
    * The function `refreshAccessToken` asynchronously refreshes the access token by making an API
    * request using a refresh token and updating the access token in the app's storage.
@@ -59,20 +72,27 @@ var Friday = class {
    */
   async refreshAccessToken() {
     try {
-      if (this.config.refreshTokenEndpoint == void 0) return;
+      if (this.config.refreshTokenEndpoint == undefined) return;
+
       const refreshToken = this.getRefreshToken();
-      if (refreshToken === void 0) throw new Error("Unauthorized Attempt!");
+      if (refreshToken === undefined) throw new Error("Unauthorized Attempt!");
+
+      // Make an API request to your backend to get a new access token using the refresh token
       const res = await this.axiosInstance.post(this.config.refreshTokenEndpoint, {
-        refreshToken
+        refreshToken,
       });
+
+      // Update the access token in your app's storage (e.g., localStorage or cookie's)
       if (res.status != 200)
         throw new Error("Refresh access token request failed!");
+
       this.resetTokens(res);
       return this.getAccessToken();
     } catch (error) {
       throw error;
     }
   }
+
   /**
    * The function `resetTokens` sets the access token and refresh token in cookies based on the
    * response data from an Axios request.
@@ -80,7 +100,7 @@ var Friday = class {
    * represents the response returned from an HTTP request made using Axios. The AxiosResponse object
    * contains data such as the response data, status, headers, and more.
    */
-  resetTokens(res) {
+  resetTokens(res: AxiosResponse<any, any>) {
     if (this.config.accessTokenKey) {
       Cookies.set(this.config.accessTokenKey, res.data.access_token);
     }
@@ -88,23 +108,30 @@ var Friday = class {
       Cookies.set(this.config.refreshTokenKey, res.data.refresh_token);
     }
   }
+
   /**
    * The function `getAccessToken` retrieves the access token from a cookie using the key specified in
    * the configuration.
    * @returns The `getAccessToken` method is returning a string value or `undefined`. It retrieves the
    * access token from a cookie using the `accessTokenKey` specified in the configuration.
    */
-  getAccessToken() {
-    return this.config.accessTokenKey && Cookies.get(this.config.accessTokenKey);
+  private getAccessToken(): string | undefined {
+    return (
+      this.config.accessTokenKey && Cookies.get(this.config.accessTokenKey)
+    );
   }
+
   /**
    * Retrieves the refresh token from a cookie using the key specified in the configuration.
    * @returns A string value or `undefined`. It retrieves the refresh token from a cookie using the
    * `refreshTokenKey` specified in the configuration.
    */
-  getRefreshToken() {
-    return this.config.refreshTokenKey && Cookies.get(this.config.refreshTokenKey);
+  private getRefreshToken(): string | undefined {
+    return (
+      this.config.refreshTokenKey && Cookies.get(this.config.refreshTokenKey)
+    );
   }
+
   /**
    * The function `getAuthorizationHeader` returns an object with an Authorization header containing a
    * Bearer token if an access token is available.
@@ -112,12 +139,16 @@ var Friday = class {
    * containing the access token in the format `Bearer ` is being returned. If the
    * `accessToken` is `undefined`, then `undefined` is being returned.
    */
-  getAuthorizationHeader() {
+  private getAuthorizationHeader(): { Authorization: string } | undefined {
     if (this.config.enableAccessToken != true) return;
+
     const accessToken = this.getAccessToken();
-    if (accessToken === void 0) return;
+
+    if (accessToken === undefined) return;
+
     return { Authorization: `Bearer ${accessToken}` };
   }
+
   /**
    * The function `handleError` in TypeScript handles errors by extracting error messages and
    * optionally displaying them as a toast.
@@ -129,27 +160,31 @@ var Friday = class {
    * function. These options can include properties like `showToast`, which is a boolean value
    * indicating whether a toast message should be displayed
    */
-  handleError(e, options) {
-    if (options?.enableThrowHttpError == false) return;
-    let errorMessage;
-    if (e?.response) {
-      const error = e;
-      errorMessage = (error.response?.data).message;
+  private handleError(e: unknown, options?: FridayOptions): undefined {
+    if(options?.enableThrowHttpError == false) return;
+
+    let errorMessage: string | undefined;
+
+    if ((e as AxiosError)?.response) {
+      const error = e as AxiosError;
+      errorMessage = (error.response?.data as Error).message;
     } else {
-      errorMessage = e.message;
+      errorMessage = (e as Error).message;
     }
     if (errorMessage) {
       this.throwError(errorMessage);
     }
   }
+
   /**
    * The throwError function in TypeScript throws an error with a specified error message.
    * @param {string} errorMessage - The `errorMessage` parameter is a string that represents the
    * message you want to associate with the error that will be thrown.
    */
-  throwError(errorMessage) {
+  throwError(errorMessage: string): void {
     throw new Error(errorMessage);
   }
+
   /**
    * The `get` function makes an asynchronous GET request using Axios with error handling and returns
    * the response data.
@@ -164,18 +199,19 @@ var Friday = class {
    * If there is an error during the request, it will handle the error using the `handleError` method
    * with the provided options.
    */
-  async get(url, options) {
+  async get(url: URL, options?: FridayOptions) {
     try {
       return await this.axiosInstance.get(url.href, {
         headers: {
           ...this.getAuthorizationHeader(),
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       return this.handleError(error, options);
     }
   }
+
   /**
    * This TypeScript function sends a POST request using Axios with optional parameters and handles any
    * errors that occur.
@@ -190,19 +226,20 @@ var Friday = class {
    * If there is an error during the request, it will handle the error using the `handleError` method
    * and return the result of that handling.
    */
-  async post(url, options) {
+  async post(url: URL, options?: FridayOptions) {
     try {
       return await this.axiosInstance.post(url.href, options?.body, {
         headers: {
           ...options?.headers,
           ...this.getAuthorizationHeader(),
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       return this.handleError(error, options);
     }
   }
+
   /**
    * This TypeScript function sends a PUT request using Axios with specified options and handles any
    * errors that occur.
@@ -214,19 +251,20 @@ var Friday = class {
    * If there is an error during the request, it will handle the error using the `handleError` method
    * and return the result of that handling.
    */
-  async put(url, options) {
+  async put(url: URL, options?: FridayOptions) {
     try {
       return await this.axiosInstance.put(url.href, options?.body, {
         headers: {
           ...options?.headers,
           ...this.getAuthorizationHeader(),
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       return this.handleError(error, options);
     }
   }
+
   /**
    * The `delete` function sends a DELETE request to a specified URL with optional headers and body,
    * handling errors and returning the response data.
@@ -240,19 +278,20 @@ var Friday = class {
    * If there is an error during the request, it will handle the error and return the result of the
    * `handleError` method with the provided options.
    */
-  async delete(url, options) {
+  async delete(url: URL, options?: FridayOptions) {
     try {
       return await this.axiosInstance.delete(url.href, {
         data: options?.body,
         headers: {
           ...options?.headers,
-          ...this.getAuthorizationHeader()
-        }
+          ...this.getAuthorizationHeader(),
+        },
       });
     } catch (error) {
       return this.handleError(error, options);
     }
   }
+
   /**
    * The `upload` function makes an asynchronous POST request using Axios with error handling and returns
    * the response data.
@@ -265,18 +304,15 @@ var Friday = class {
    * @returns The `upload` function is returning the data from the response if the request is successful.
    * If an error occurs during the request, it will handle the error using the `handleError` method.
    */
-  async upload(url, body) {
+  async upload(url: URL, body: FormData) {
     try {
       return await this.axiosInstance.post(url.href, body, {
         headers: {
-          ...this.getAuthorizationHeader()
-        }
+          ...this.getAuthorizationHeader(),
+        },
       });
     } catch (e) {
       return this.handleError(e);
     }
   }
-};
-export {
-  Friday as default
-};
+}

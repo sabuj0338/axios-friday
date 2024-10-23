@@ -1,10 +1,10 @@
 {
   "name": "@sabuj0338/axios-friday",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Friday - a axios based api handling custom class. which has refresh token mechanism configured.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
@@ -17,10 +17,9 @@
   },
   "keywords": [
     "typescript",
-    "library",
     "axios",
-    "refresh",
-    "token"
+    "refresh token",
+    "authorization"
   ],
   "author": "Sabuj Islam <sabuj0338@gmail.com>",
   "license": "MIT",

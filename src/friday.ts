@@ -62,6 +62,21 @@ export class Friday {
         }
       );
     }
+
+    // Add Axios request interceptor
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        if (config.url) {
+          const baseUrl = config.baseURL || "";
+          const fullUrl = new URL(config.url, baseUrl).toString();
+          config.url = this.cleanUrl(fullUrl).replace(baseUrl, ""); // Retain relative path if baseURL is set
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
   }
 
   /**
@@ -78,9 +93,12 @@ export class Friday {
       if (refreshToken === undefined) throw new Error("Unauthorized Attempt!");
 
       // Make an API request to your backend to get a new access token using the refresh token
-      const res = await this.axiosInstance.post(this.config.refreshTokenEndpoint, {
-        refreshToken,
-      });
+      const res = await this.axiosInstance.post(
+        this.config.refreshTokenEndpoint,
+        {
+          refreshToken,
+        }
+      );
 
       // Update the access token in your app's storage (e.g., localStorage or cookie's)
       if (res.status != 200)
@@ -161,7 +179,7 @@ export class Friday {
    * indicating whether a toast message should be displayed
    */
   private handleError(e: unknown, options?: FridayOptions): undefined {
-    if(options?.enableThrowHttpError == false) return;
+    if (options?.enableThrowHttpError == false) return;
 
     let errorMessage: string | undefined;
 
@@ -183,6 +201,37 @@ export class Friday {
    */
   throwError(errorMessage: string): void {
     throw new Error(errorMessage);
+  }
+
+  /**
+   * The `cleanUrl` function in TypeScript takes a URL as input, removes any empty parameters from the
+   * query string, and returns the cleaned URL.
+   * @param {string} url - The `cleanUrl` function takes a URL as a parameter and cleans up the query
+   * string by removing any empty parameters. If there are no query parameters, it returns the original
+   * URL.
+   * @returns The `cleanUrl` function returns a cleaned version of the input URL by removing any empty
+   * parameters from the query string. If the query string is empty after cleaning, it returns the base
+   * URL without the query string.
+   */
+  private cleanUrl(url: string): string {
+    // Split the URL into base and query string
+    const [base, query] = url.split("?");
+
+    if (!query) return url; // Return the original URL if there's no query string
+
+    // Initialize URLSearchParams to handle query string
+    const searchParams = new URLSearchParams(query);
+
+    // Remove any empty parameters
+    for (const [key, value] of searchParams.entries()) {
+      if (value === "") {
+        searchParams.delete(key);
+      }
+    }
+
+    // Construct and return the cleaned URL
+    const cleanedQuery = searchParams.toString();
+    return cleanedQuery ? `${base}?${cleanedQuery}` : base;
   }
 
   /**

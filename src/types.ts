@@ -12,6 +12,7 @@ export interface FridayOptions {
  * @var refreshTokenEndpoint: an optional string property representing the API endpoint for refreshing tokens.
  * @var enableAccessToken: a optional boolean property indicating whether token access is enabled.
  * @var enableRefreshToken: a optional boolean property indicating whether token refresh is enabled.
+ * @var storage: a required string property representing the storage mechanism for tokens.
  */
 export interface FridayConfig {
   baseURL: string;
@@ -20,4 +21,5 @@ export interface FridayConfig {
   refreshTokenEndpoint?: string;
   enableAccessToken?: boolean;
   enableRefreshToken?: boolean;
+  storage?: 'cookie' | 'local';
 }

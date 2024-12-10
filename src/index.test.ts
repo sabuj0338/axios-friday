@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import Friday from "./index";
+import { Friday } from "./friday";
 
 describe("GET /", () => {
   const baseURL = "https://sabuj0338.github.io/portfolio";

@@ -28,6 +28,7 @@ export class Friday {
     refreshTokenEndpoint = "/api/refresh",
     enableAccessToken = true,
     enableRefreshToken = false,
+    storage = "cookie",
   }: FridayConfig) {
     this.config = {
       baseURL,
@@ -36,6 +37,7 @@ export class Friday {
       refreshTokenEndpoint,
       enableAccessToken,
       enableRefreshToken,
+      storage,
     };
 
     // Create an Axios instance with a base URL
@@ -112,6 +114,24 @@ export class Friday {
   }
 
   /**
+   * The setTokens function stores a key-value pair either in a cookie or in local storage based on the
+   * configuration.
+   * @param {string} key - The `key` parameter is a string that represents the key under which the
+   * `value` will be stored in either a cookie or local storage, depending on the configuration set in
+   * `this.config.storage`.
+   * @param {string} value - The `value` parameter in the `setTokens` function represents the value that
+   * you want to store in either a cookie or local storage, based on the configuration set in
+   * `this.config.storage`.
+   */
+  private setTokens(key: string, value: string) {
+    if (this.config.storage == "cookie") {
+      Cookies.set(key, value);
+    } else if (this.config.storage == "local") {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  /**
    * The function `resetTokens` sets the access token and refresh token in cookies based on the
    * response data from an Axios request.
    * @param res - The `res` parameter in the `resetTokens` function is an AxiosResponse object. It
@@ -120,10 +140,10 @@ export class Friday {
    */
   resetTokens(res: AxiosResponse<any, any>) {
     if (this.config.accessTokenKey) {
-      Cookies.set(this.config.accessTokenKey, res.data.access_token);
+      this.setTokens(this.config.accessTokenKey, res.data.access_token);
     }
     if (this.config.refreshTokenKey) {
-      Cookies.set(this.config.refreshTokenKey, res.data.refresh_token);
+      this.setTokens(this.config.refreshTokenKey, res.data.refresh_token);
     }
   }
 
@@ -134,9 +154,16 @@ export class Friday {
    * access token from a cookie using the `accessTokenKey` specified in the configuration.
    */
   private getAccessToken(): string | undefined {
-    return (
-      this.config.accessTokenKey && Cookies.get(this.config.accessTokenKey)
-    );
+    if (this.config.storage == "cookie") {
+      return (
+        this.config.accessTokenKey && Cookies.get(this.config.accessTokenKey)
+      );
+    } else if (this.config.storage == "local") {
+      return (
+        this.config.accessTokenKey &&
+        (localStorage.getItem(this.config.accessTokenKey) || undefined)
+      );
+    }
   }
 
   /**

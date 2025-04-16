@@ -172,9 +172,16 @@ export class Friday {
    * `refreshTokenKey` specified in the configuration.
    */
   private getRefreshToken(): string | undefined {
-    return (
-      this.config.refreshTokenKey && Cookies.get(this.config.refreshTokenKey)
-    );
+    if (this.config.storage == "cookie") {
+      return (
+        this.config.refreshTokenKey && Cookies.get(this.config.refreshTokenKey)
+      );
+    } else if (this.config.storage == "local") {
+      return (
+        this.config.refreshTokenKey &&
+        (localStorage.getItem(this.config.refreshTokenKey) || undefined)
+      );
+    }
   }
 
   /**

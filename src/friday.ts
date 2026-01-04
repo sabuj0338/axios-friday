@@ -349,6 +349,31 @@ export class Friday {
   }
 
   /**
+   * This TypeScript function sends a PATCH request using Axios with specified options and handles any
+   * errors that occur.
+   * @param {URL} url - The `url` parameter in the `patch` function is a URL object that represents the
+   * URL where the PATCH request will be sent. It is used to specify the destination of the request.
+   * @param {FridayOptions} [options] - The `options` parameter in the `patch` function is an optional
+   * object that may contain the following properties:
+   * @returns The `patch` function is returning the data from the response if the request is successful.
+   * If there is an error during the request, it will handle the error using the `handleError` method
+   * and return the result of that handling.
+   */
+  async patch(url: URL, options?: FridayOptions) {
+    try {
+      return await this.axiosInstance.patch(url.href, options?.body, {
+        headers: {
+          ...options?.headers,
+          ...this.getAuthorizationHeader(),
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      return this.handleError(error, options);
+    }
+  }
+
+  /**
    * The `delete` function sends a DELETE request to a specified URL with optional headers and body,
    * handling errors and returning the response data.
    * @param {URL} url - The `url` parameter is a `URL` object that represents the URL of the resource

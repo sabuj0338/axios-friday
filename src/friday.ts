@@ -95,7 +95,7 @@ export class Friday {
       if (refreshToken === undefined) throw new Error("Unauthorized Attempt!");
 
       // Make an API request to your backend to get a new access token using the refresh token
-      const res = await axios.post(this.config.refreshTokenEndpoint, {
+      const res = await axios.post(this.config.baseURL + this.config.refreshTokenEndpoint, {
         refreshToken,
       });
 
